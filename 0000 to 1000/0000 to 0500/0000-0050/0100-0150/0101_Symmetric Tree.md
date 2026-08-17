@@ -28,31 +28,13 @@ A tree is symmetric if its left and right subtrees are **mirror images** of each
     3  4 4  3
 ```
 
-The tree is symmetric:
-
-```text
-3 ↔ 3
-4 ↔ 4
-2 ↔ 2
-```
-
 Result:
 
 ```text
 true
 ```
 
-A tree such as:
-
-```text
-        1
-       / \
-      2   2
-       \   \
-        3   3
-```
-
-is not symmetric because the `3`s are on the same side instead of being mirror images.
+The corresponding nodes have equal values and appear in mirror positions.
 
 ---
 
@@ -60,37 +42,25 @@ is not symmetric because the `3`s are on the same side instead of being mirror i
 
 ## Idea
 
-A tree is symmetric if its **left subtree and right subtree are mirrors of each other**.
+A tree is symmetric if its **left subtree and right subtree are mirrors** of each other.
 
-Therefore, instead of comparing:
+For two nodes `left` and `right` to be mirrors:
 
-```text
-left.left  ↔ right.left
-left.right ↔ right.right
-```
-
-we compare **mirror positions**:
-
-```text
-left.left  ↔ right.right
-left.right ↔ right.left
-```
-
-For two nodes `p` and `q` to be mirrors:
-
-1. Both must be `NULL`, or
-2. Exactly one must be `NULL` → not a mirror, or
-3. Their values must be equal.
-4. Their outer children must match:
+1. Both are `NULL`, or
+2. Exactly one is `NULL` → not a mirror, or
+3. Their values are equal.
+4. The outer children are mirrors:
 
    ```text
-   p->left  ↔ q->right
+   left->left  ↔ right->right
    ```
-5. Their inner children must match:
+5. The inner children are mirrors:
 
    ```text
-   p->right ↔ q->left
+   left->right ↔ right->left
    ```
+
+The important difference from **Same Tree (100)** is that children are compared in **cross order**.
 
 ## Dry Run
 
@@ -105,7 +75,7 @@ For two nodes `p` and `q` to be mirrors:
 Start with:
 
 ```text
-left  = 2
+left = 2
 right = 2
 ```
 
@@ -120,16 +90,7 @@ right->right = 3
 
 Values match.
 
-Compare:
-
-```text
-3's left  ↔ 3's right
-3's right ↔ 3's left
-```
-
-Both are `NULL`.
-
-Now compare inner children:
+Compare inner children:
 
 ```text
 left->right = 4
@@ -138,53 +99,42 @@ right->left = 4
 
 Values match.
 
-Again, their children are mirror pairs.
+Continue recursively until all corresponding mirror positions are checked.
 
-Therefore:
+All pairs match:
 
 ```text
 answer = true
 ```
 
-## Important Difference From Same Tree
+## Algorithm
 
-For **Same Tree (100)**:
+1. If both nodes are `NULL`, return `true`.
+2. If exactly one node is `NULL`, return `false`.
+3. If their values are different, return `false`.
+4. Recursively compare `left->left` with `right->right`.
+5. Recursively compare `left->right` with `right->left`.
+6. Return `true` only if both recursive comparisons return `true`.
+7. Start the comparison with `root->left` and `root->right`.
 
-```text
-p->left  ↔ q->left
-p->right ↔ q->right
-```
+## Complexity
 
-For **Symmetric Tree (101)**:
-
-```text
-p->left  ↔ q->right
-p->right ↔ q->left
-```
-
-The second tree is not being compared in the same orientation; it is being compared as a **mirror**.
+* **Time:** `O(n)`
+* **Space:** `O(h)` for the recursion stack
+* **Worst-case Space:** `O(n)` for a skewed tree
+* **Balanced Tree Space:** `O(log n)`
 
 ## Notes / Tips
 
-* The root does not need to be compared with itself; symmetry is checked between its left and right subtrees.
-* The key is remembering the **cross comparison**:
+* The key idea is **mirror comparison**, not normal tree comparison.
+* Remember:
 
   ```text
   left.left  ↔ right.right
   left.right ↔ right.left
   ```
-* Values alone are not enough; the structure must also be mirrored.
-* `NULL` positions are important for detecting structural asymmetry.
-* This is essentially the **Same Tree** problem with mirrored child comparisons.
-
-## Complexity
-
-Let `n` be the number of nodes and `h` be the tree height.
-
-* **Time:** `O(n)`
-* **Space:** `O(h)` recursion stack
-* **Worst-case Space:** `O(n)` for a skewed tree
-* **Balanced Tree Space:** `O(log n)`
+* `NULL` positions are important because the structure must also be symmetric.
+* This is essentially **Same Tree (100)** with the child comparisons reversed.
 
 ## Code
 
@@ -224,20 +174,28 @@ public:
 
 ## Idea
 
-The recursive solution can be converted into an explicit stack.
+The recursive solution uses the function call stack to store pairs of nodes that still need to be compared.
 
-Instead of recursively calling:
+We can explicitly maintain these pairs using a `stack`.
+
+Each stack entry contains:
 
 ```text
-isMirror(left->left, right->right)
-isMirror(left->right, right->left)
+(left node, right node)
 ```
 
-store the pairs that need to be compared in a stack.
+The pair must represent two **mirror-positioned nodes**.
 
-Each pair represents two nodes that should be mirror images.
+When a pair matches, push their mirror children:
+
+```text
+left->left  ↔ right->right
+left->right ↔ right->left
+```
 
 ## Dry Run
+
+For:
 
 ```text
         1
@@ -259,11 +217,11 @@ Pop `(2, 2)`:
 2 == 2
 ```
 
-Push mirror pairs:
+Push:
 
 ```text
-(2->left, 2->right)   → (3, 3)
-(2->right, 2->left)   → (4, 4)
+(3, 3)
+(4, 4)
 ```
 
 Process `(4, 4)`:
@@ -272,33 +230,42 @@ Process `(4, 4)`:
 4 == 4
 ```
 
-Their mirror children are both `NULL`.
+Their corresponding children are both `NULL`.
 
 Process `(3, 3)` similarly.
 
-Stack becomes empty.
+The stack eventually becomes empty without finding a mismatch.
 
 ```text
 answer = true
 ```
 
-## Notes / Tips
+## Algorithm
 
-* Store **pairs of nodes**, not individual nodes.
-* Every pair in the stack represents a mirror comparison.
-* The child pairs must always be pushed in cross order:
+1. If `root == NULL`, return `true`.
+2. Create a stack of pairs of tree nodes.
+3. Push `{root->left, root->right}`.
+4. While the stack is not empty:
 
-  ```text
-  left.left  ↔ right.right
-  left.right ↔ right.left
-  ```
-* This avoids recursion depth issues for very deep trees.
+   1. Pop a pair `(left, right)`.
+   2. If both are `NULL`, continue.
+   3. If exactly one is `NULL`, return `false`.
+   4. If their values differ, return `false`.
+   5. Push `{left->left, right->right}`.
+   6. Push `{left->right, right->left}`.
+5. If every pair matches, return `true`.
 
 ## Complexity
 
 * **Time:** `O(n)`
-* **Space:** `O(h)` average/balanced
-* **Worst-case Space:** `O(n)`
+* **Space:** `O(n)` worst case
+
+## Notes / Tips
+
+* Store **pairs of nodes**, not individual nodes.
+* Every pair represents a mirror comparison.
+* The order in which children are pushed is important.
+* This avoids recursion depth issues for very deep trees.
 
 ## Code
 
@@ -344,22 +311,24 @@ public:
 
 ## Idea
 
-The same mirror comparison can be performed level by level using a queue.
+The same mirror comparison can be performed level by level using a `queue`.
 
-Store corresponding **mirror-positioned pairs**:
+Instead of processing individual nodes, store pairs of mirror-positioned nodes:
 
 ```text
-(left node, right node)
+(left, right)
 ```
 
 For every pair:
 
 * Both `NULL` → continue.
-* One `NULL` → `false`.
+* Exactly one `NULL` → `false`.
 * Different values → `false`.
-* Otherwise, add the two mirror child pairs.
+* Otherwise, push their mirror child pairs.
 
 ## Dry Run
+
+For:
 
 ```text
         1
@@ -369,7 +338,7 @@ For every pair:
     3  4 4  3
 ```
 
-Queue:
+Initial queue:
 
 ```text
 [(2, 2)]
@@ -388,8 +357,6 @@ Add:
 (4, 4)
 ```
 
-Process the next level.
-
 Both pairs match.
 
 Their children produce:
@@ -399,29 +366,44 @@ Their children produce:
 (NULL, NULL)
 ```
 
-All mirror pairs match.
+All pairs are valid.
 
 ```text
 answer = true
 ```
 
+## Algorithm
+
+1. If `root == NULL`, return `true`.
+2. Create a queue of pairs of tree nodes.
+3. Push `{root->left, root->right}`.
+4. While the queue is not empty:
+
+   1. Remove a pair `(left, right)`.
+   2. If both are `NULL`, continue.
+   3. If exactly one is `NULL`, return `false`.
+   4. If their values differ, return `false`.
+   5. Push `{left->left, right->right}`.
+   6. Push `{left->right, right->left}`.
+5. If all mirror pairs match, return `true`.
+
+## Complexity
+
+* **Time:** `O(n)`
+* **Space:** `O(w)`, where `w` is the maximum width of the tree
+* **Worst-case Space:** `O(n)`
+
 ## Notes / Tips
 
-* BFS is useful when thinking in terms of levels.
-* The queue stores mirror pairs rather than adjacent nodes.
-* The same mirror relationships are maintained:
+* BFS is useful when thinking about the tree level by level.
+* The queue still stores **mirror pairs**, not ordinary parent-child pairs.
+* The essential relationships remain:
 
   ```text
   left.left  ↔ right.right
   left.right ↔ right.left
   ```
-* BFS can use `O(n)` space in the worst case because an entire level may contain many nodes.
-
-## Complexity
-
-* **Time:** `O(n)`
-* **Space:** `O(w)`, where `w` is the maximum tree width
-* **Worst-case Space:** `O(n)`
+* BFS can require more memory than recursive DFS for a very wide tree.
 
 ## Code
 
@@ -461,44 +443,4 @@ public:
 };
 ```
 
----
 
-# Key Pattern
-
-```text
-              root
-             /    \
-            L      R
-             \    /
-              \  /
-           Mirror Pair
-```
-
-For every pair `(L, R)`:
-
-```text
-L->val == R->val
-
-L->left  ↔ R->right
-L->right ↔ R->left
-```
-
-### Core Recursive Template
-
-```cpp
-bool isMirror(TreeNode* left, TreeNode* right) {
-    if (left == NULL && right == NULL) {
-        return true;
-    }
-
-    if (left == NULL || right == NULL) {
-        return false;
-    }
-
-    if (left->val != right->val) {
-        return false;
-    }
-
-    return isMirror(left->left, right->right) &&
-           isMirror(left->right, right->left);
-}

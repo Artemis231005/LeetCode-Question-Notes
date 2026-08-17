@@ -67,12 +67,6 @@ This metadata makes the repository **searchable and easy to filter**, allowing p
 * Maintain a convenient reference for **revision and future practice**.
 * Prepare for coding interviews and competitive programming.
 
-## Note
-
-* This repository is primarily a **personal learning and revision resource**.
-* The notes focus on understanding the reasoning behind solutions rather than only storing code.
-* The collection will grow over time as more LeetCode problems are practiced.
-
 ## Topics
 
 The repository covers problems involving topics such as:
@@ -94,4 +88,10 @@ The repository covers problems involving topics such as:
 * Mathematics
 * Game Theory
 * And other DSA patterns
+
+## Note
+
+* This repository is primarily a **personal learning and revision resource**.
+* The notes focus on understanding the reasoning behind solutions rather than only storing code.
+* The collection will grow over time as more LeetCode problems are practiced.
 

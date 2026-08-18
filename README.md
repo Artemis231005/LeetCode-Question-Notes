@@ -92,6 +92,7 @@ The repository covers problems involving topics such as:
 ## Note
 
 * This repository is primarily a **personal learning and revision resource**.
-* The notes focus on understanding the reasoning behind solutions rather than only storing code.
+* The notes focus on the reasoning behind solutions rather than only storing code.
+* This files in the repository are created with my approaches/understanding/code and structered with the help of AI.
 * The collection will grow over time as more LeetCode problems are practiced.
 

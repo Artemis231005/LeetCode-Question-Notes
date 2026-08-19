@@ -24,15 +24,15 @@ Example:
 
 ```text
 LeetCode-Notes/
-├── 01-50/
-│   ├── 01-Two-Sum.md
+├── 0001-0050/
+│   ├── 0001_Two Sum.md
 │   └── ...
-├── 51-100/
-│   ├── 56-Merge-Intervals.md
-│   ├── 100-Same-Tree.md
+├── 0051-0100/
+│   ├── 0056_Merge Intervals.md
+│   ├── 0100_Same Tree.md
 │   └── ...
-├── 101-150/
-│   ├── 135-Candy.md
+├── 0101-0150/
+│   ├── 0135_Candy.md
 │   └── ...
 └── README.md
 ```
@@ -92,6 +92,7 @@ The repository covers problems involving topics such as:
 ## Note
 
 * This repository is primarily a **personal learning and revision resource**.
-* The notes focus on understanding the reasoning behind solutions rather than only storing code.
+* The notes focus on the reasoning behind solutions rather than only storing code.
+* This files in the repository are created with my approaches/understanding/code and structered with the help of AI.
 * The collection will grow over time as more LeetCode problems are practiced.
 

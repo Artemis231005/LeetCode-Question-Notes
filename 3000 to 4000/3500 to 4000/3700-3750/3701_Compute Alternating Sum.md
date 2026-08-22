@@ -1,4 +1,16 @@
-# Compute Alternating Sum
+# LeetCode 3701 — Compute Alternating Sum
+
+## Metadata
+
+* **LeetCode:** 3701
+* **Problem:** Compute Alternating Sum
+* **Difficulty:** Easy
+* **Topics:** Array, Math
+* **Pattern:** Alternating Positions
+* **Key Technique:** Add Even-Index Elements, Subtract Odd-Index Elements
+* **Optimal Complexity:** `O(n)` Time, `O(1)` Space
+
+---
 
 ## Problem
 

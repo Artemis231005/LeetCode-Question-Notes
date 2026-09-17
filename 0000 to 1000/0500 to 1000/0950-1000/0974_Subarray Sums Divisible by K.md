@@ -267,7 +267,9 @@ public:
             sum += num;
             int rem = ((sum % k) + k) % k;
 
-            count += remainderCount[rem];
+            if (prefix.find(rem) != prefix.end()) {
+                count += remainderCount[rem];
+            } 
             remainderCount[rem]++;
         }
 
